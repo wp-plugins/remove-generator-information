@@ -1,8 +1,8 @@
 <?php
 /*
   Plugin Name: Remove Generator Information
-  Description: Deshabilita la informaci&oacute;n sobre qui&eacute;n ha generado el HTML,XHTML,RSS,ATOM,etc...
-  Version: 0.1
+  Description: Remove all generator information on xhtml, html, rss2, atom, rdf, comments and export pages.
+  Version: 0.2
   Author: Joan B. Gim&eacute;nez Sendiu
 */
 /*  Copyright 2009  JUAN BAUTISTA GIMENEZ SENDIU  (email : neojoda@gmail.com)
@@ -27,38 +27,44 @@ define("VERSION_RGM","0.1");
  * @ return void
 */
 function no_generator_metatag_options(){
-  echo '<div class="wrap">';
-  echo '<h2>Remove Generator Information</h2>';
+    
+   
+    echo '<div class="wrap">';
+    echo '<h2>Remove Generator Information</h2>';
 	echo '<form method="post" action="options.php">';
 	echo '<table class="form-table">';
 	echo '<tr valign="top">';
-	echo '  <th scope="row" style="width:300px;">No Generator info on XHTML page</th>';
-	echo '  <td><input type="checkbox" name="no_generator_metatag_xhtml" value="1" '.(get_option("no_generator_metatag_xhtml")==1 ? "checked" : "").'" /></td>';
+	echo '  <th scope="row" style="width:350px;"><strong>Select / Unselect All</strong>&nbsp;&nbsp;';
+	echo '  <input type="checkbox" id="no_generator_select_unselect" name="no_generator_select_unselect" value="" /></th>';
+	echo '</tr>';
+	echo '<tr valign="top">';
+	echo '  <th scope="row" style="width:350px;">Remove generator information on XHTML page</th>';
+	echo '  <td><input class="checkbox_no_generator_metatag" type="checkbox" name="no_generator_metatag_xhtml" value="1" '.(get_option("no_generator_metatag_xhtml")==1 ? "checked" : "").' /></td>';
 	echo '</tr><tr>';
-	echo '  <th scope="row">No Generator info on a HTML page</th>';
-	echo '  <td><input type="checkbox" name="no_generator_metatag_html" value="1" '.(get_option("no_generator_metatag_html")==1 ? "checked" : "").'" /></td>';
+	echo '  <th scope="row">Remove generator information on a HTML page</th>';
+	echo '  <td><input class="checkbox_no_generator_metatag" type="checkbox" name="no_generator_metatag_html" value="1" '.(get_option("no_generator_metatag_html")==1 ? "checked" : "").' /></td>';
 	echo '</tr><tr>';
-	echo '  <th scope="row">No Generator info on an ATOM page</th>';
-	echo '  <td><input type="checkbox" name="no_generator_metatag_atom" value="1" '.(get_option("no_generator_metatag_atom")==1 ? "checked" : "").'" /></td>';
+	echo '  <th scope="row">Remove generator information on ATOM page</th>';
+	echo '  <td><input class="checkbox_no_generator_metatag" type="checkbox" name="no_generator_metatag_atom" value="1" '.(get_option("no_generator_metatag_atom")==1 ? "checked" : "").' /></td>';
 	echo '</tr><tr>';
-	echo '  <th scope="row">No Generator info on a RSS2 page</th>';
-	echo '  <td><input type="checkbox" name="no_generator_metatag_rss2" value="1" '.(get_option("no_generator_metatag_rss2")==1 ? "checked" : "").'" /></td>';
+	echo '  <th scope="row">Remove generator information on RSS2 page</th>';
+	echo '  <td><input class="checkbox_no_generator_metatag" type="checkbox" name="no_generator_metatag_rss2" value="1" '.(get_option("no_generator_metatag_rss2")==1 ? "checked" : "").' /></td>';
 	echo '</tr><tr>';
-	echo '  <th scope="row">No Generator info on a RDF page</th>';
-	echo '  <td><input type="checkbox" name="no_generator_metatag_rdf" value="1" '.(get_option("no_generator_metatag_rdf")==1 ? "checked" : "").'" /></td>';
+	echo '  <th scope="row">Remove generator information on RDF page</th>';
+	echo '  <td><input class="checkbox_no_generator_metatag" type="checkbox" name="no_generator_metatag_rdf" value="1" '.(get_option("no_generator_metatag_rdf")==1 ? "checked" : "").' /></td>';
 	echo '</tr><tr>';
-	echo '  <th scope="row">No Generator info on a comment page</th>';
-	echo '  <td><input type="checkbox" name="no_generator_metatag_comment" value="1" '.(get_option("no_generator_metatag_comment")==1 ? "checked" : "").'" /></td>';
+	echo '  <th scope="row">Remove generator information on comment page</th>';
+	echo '  <td><input class="checkbox_no_generator_metatag" type="checkbox" name="no_generator_metatag_comment" value="1" '.(get_option("no_generator_metatag_comment")==1 ? "checked" : "").' /></td>';
 	echo '</tr><tr>';
-	echo '  <th scope="row">No Generator info on a "export" file</th>';
-	echo '  <td><input type="checkbox" name="no_generator_metatag_export" value="1" '.(get_option("no_generator_metatag_export")==1 ? "checked" : "").'" /></td>';
+	echo '  <th scope="row">Remove generator information on "export" file</th>';
+	echo '  <td><input class="checkbox_no_generator_metatag" type="checkbox" name="no_generator_metatag_export" value="1" '.(get_option("no_generator_metatag_export")==1 ? "checked" : "").' /></td>';
 	echo '</tr>';
 	echo '</table>';
 	settings_fields("update-options_no_generator_metatag");
 	echo '  <p class="submit">';
-  echo '    <input type="submit" class="button-primary" value="'.__('Save Changes').'" />';
+    echo '    <input type="submit" class="button-primary" value="'.__('Save Changes').'" />';
 	echo '  </p>';	
-  echo '</form>';
+    echo '</form>';
 	echo '</div>';
 }
 
@@ -66,7 +72,13 @@ function no_generator_metatag_options(){
  * @ return void
 */
 function no_generator_metatag_admin_menu(){
-  add_options_page('Remove Generator', 'Remove Generator', '10', 'no_generator_metatag', 'no_generator_metatag_options');
+  $page=add_options_page('Remove Generator', 'Remove Generator', '10', 'no_generator_metatag', 'no_generator_metatag_options');
+  /* Using registered $page handle to hook script load */
+  add_action('admin_print_scripts-' . $page, 'no_generator_metatag_admin_styles');
+}
+
+function no_generator_metatag_admin_styles(){
+   wp_enqueue_script('no_generator_metatagScript');
 }
 
 /**
@@ -110,14 +122,16 @@ function deactive_no_generator_metatag(){
   //For future releases
 }
 
-function no_generator_metatag__mysettings(){
-  register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_xhtml' );
-  register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_html' );
-	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_atom' );
-	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_rss2' );
-	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_rdf' );
-	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_comment' );
-	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_export' );	
+function no_generator_metatag__init(){
+    register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_xhtml');
+    register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_html');
+	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_atom');
+	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_rss2');
+	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_rdf');
+	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_comment');
+	register_setting( 'update-options_no_generator_metatag', 'no_generator_metatag_export');
+	
+	wp_register_script('no_generator_metatagScript', WP_PLUGIN_URL . '/remove-generator-information/remove_generator_information.js');
 }
 
 register_activation_hook(__FILE__, 'activate_no_generator_metatag');
@@ -125,7 +139,7 @@ register_deactivation_hook(__FILE__, 'deactive_no_generator_metatag');
 
 if (is_admin()) {
   add_action('admin_menu', 'no_generator_metatag_admin_menu');
-	add_action( 'admin_init', 'no_generator_metatag__mysettings' );
+  add_action( 'admin_init', 'no_generator_metatag__init' );
 }
 if (!is_admin()) {
   add_action("init","no_generator_metatag_remove_filters");
