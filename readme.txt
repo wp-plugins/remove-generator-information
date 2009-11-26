@@ -13,7 +13,7 @@ Current version only removes the generator metatag from the HTTP header. Future 
 
 == Installation ==
 
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
+1. Upload `remove-generator-information` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. By default the plugin does nothing. Go to "Options" => "No generator Metatag" to select where do you want to remove the generator meta tag!
 
