@@ -1,5 +1,4 @@
 === Plugin Name ===
-Contributors: hermes.pique
 Tags: generator, metatag
 Requires at least: 2.8
 Tested up to: 2.8.6
